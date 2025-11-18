@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axilla Gross Anatomy 2 Quiz</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .quiz-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .questions-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .answer-section.visible {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .question-text {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .option.selected {
+            background-color: #e3f2fd;
+            border-color: var(--secondary);
+        }
+        
+        .option.correct {
+            background-color: #e8f5e9;
+            border-color: var(--success);
+        }
+        
+        .option.incorrect {
+            background-color: #ffebee;
+            border-color: var(--danger);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .reset-btn {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .reset-btn:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .share-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .share-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .passed .stat-value {
+            color: var(--success);
+        }
+        
+        .failed .stat-value {
+            color: var(--danger);
+        }
+        
+        .attempted .stat-value {
+            color: var(--secondary);
+        }
+        
+        .answer-bank {
+            margin-top: 30px;
+        }
+        
+        .answer-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .answer-correct {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .answer-incorrect {
+            color: var(--danger);
+        }
+        
+        .support-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .support-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .support-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .share-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn-small {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .share-twitter {
+            background-color: #1DA1F2;
+            color: white;
+        }
+        
+        .share-facebook {
+            background-color: #4267B2;
+            color: white;
+        }
+        
+        .share-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .share-copy {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-container {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .share-btn-small {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Axilla Gross Anatomy 2</h1>
+            <p class="subtitle">A challenging quiz based on the Vishram Upper Limb textbook</p>
+        </header>
+        
+        <div class="quiz-container">
+            <div class="questions-section" id="questions-section">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            
+            <div class="answer-section" id="answer-section">
+                <h2>Answer Bank</h2>
+                <p>Check your answers after completing the quiz</p>
+                <div id="answer-bank">
+                    <!-- Answers will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="reset-btn" id="reset-btn">Reset Quiz</button>
+            <button class="submit-btn" id="submit-btn">Submit Answers</button>
+        </div>
+        
+        <div class="results-section" id="results-section">
+            <div class="score-display">
+                <h2>Your Score</h2>
+                <div class="score-value" id="score-value">0/40</div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box attempted">
+                    <div class="stat-value" id="attempted-value">0</div>
+                    <div class="stat-label">Questions Attempted</div>
+                </div>
+                <div class="stat-box passed">
+                    <div class="stat-value" id="passed-value">0</div>
+                    <div class="stat-label">Questions Passed</div>
+                </div>
+                <div class="stat-box failed">
+                    <div class="stat-value" id="failed-value">0</div>
+                    <div class="stat-label">Questions Failed</div>
+                </div>
+            </div>
+            
+            <div class="share-section">
+                <h3>Share Your Results</h3>
+                <div class="share-buttons">
+                    <button class="share-btn-small share-twitter" id="share-twitter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                        Twitter
+                    </button>
+                    <button class="share-btn-small share-facebook" id="share-facebook">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                        </svg>
+                        Facebook
+                    </button>
+                    <button class="share-btn-small share-whatsapp" id="share-whatsapp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.017 2.047c-2.724 0-5.443 1.042-7.513 3.112-4.163 4.163-4.163 10.92 0 15.083 2.07 2.07 4.789 3.112 7.513 3.112s5.443-1.042 7.513-3.112c4.163-4.163 4.163-10.92 0-15.083-2.07-2.07-4.789-3.112-7.513-3.112zm-3.017 15.953l-1.516-1.516 3.035-3.035-3.035-3.035 1.516-1.516 3.035 3.035 3.035-3.035 1.516 1.516-3.035 3.035 3.035 3.035-1.516 1.516-3.035-3.035-3.035 3.035z"/>
+                        </svg>
+                        WhatsApp
+                    </button>
+                    <button class="share-btn-small share-copy" id="share-copy">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 1h-12c-1.1 0-2 .9-2 2v14h2v-14h12v-2zm3 4h-11c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-11v-14h11v14z"/>
+                        </svg>
+                        Copy Results
+                    </button>
+                </div>
+            </div>
+            
+            <div class="answer-bank">
+                <h3>Detailed Answers</h3>
+                <div id="detailed-answers">
+                    <!-- Detailed answers will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="support-section">
+            <h3>Follow Code God to support more medical quizzes</h3>
+            <a href="https://www.tiktok.com/@code.god3?_r=1&_t=ZS-91SF7FxgGKu" target="_blank" class="support-link">Follow on TikTok</a>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions and answers for Axilla Quiz 2
+        const quizData = [
+            {
+                question: "Which structure forms the anterior boundary of the quadrangular space?",
+                options: [
+                    "Teres minor",
+                    "Teres major",
+                    "Surgical neck of humerus",
+                    "Long head of triceps"
+                ],
+                correct: 2,
+                explanation: "The anterior boundary of the quadrangular space is formed by the surgical neck of the humerus."
+            },
+            {
+                question: "The axillary sheath is a continuation of which cervical fascia?",
+                options: [
+                    "Pretracheal fascia",
+                    "Prevertebral fascia",
+                    "Investing layer",
+                    "Buccopharyngeal fascia"
+                ],
+                correct: 1,
+                explanation: "The axillary sheath is a continuation of the prevertebral fascia of the neck, enclosing the axillary vessels and brachial plexus."
+            },
+            {
+                question: "Which nerve is most vulnerable to injury in crutch paralysis?",
+                options: [
+                    "Musculocutaneous nerve",
+                    "Radial nerve",
+                    "Median nerve",
+                    "Ulnar nerve"
+                ],
+                correct: 1,
+                explanation: "The radial nerve is most vulnerable in crutch paralysis as it lies in the spiral groove of the humerus and can be compressed against the bone."
+            },
+            {
+                question: "The subscapular bursa communicates with which joint?",
+                options: [
+                    "Glenohumeral joint",
+                    "Acromioclavicular joint",
+                    "Sternoclavicular joint",
+                    "Scapulothoracic joint"
+                ],
+                correct: 0,
+                explanation: "The subscapular bursa communicates with the glenohumeral joint cavity, forming part of the shoulder joint complex."
+            },
+            {
+                question: "Which artery is the primary source of collateral circulation after axillary artery ligation?",
+                options: [
+                    "Subscapular artery",
+                    "Posterior circumflex humeral artery",
+                    "Thoracoacromial artery",
+                    "Suprascapular artery"
+                ],
+                correct: 0,
+                explanation: "The subscapular artery provides the most important collateral circulation around the shoulder after axillary artery ligation, connecting with branches of the thyrocervical trunk."
+            },
+            {
+                question: "The medial cutaneous nerve of the arm arises from which cord?",
+                options: [
+                    "Lateral cord",
+                    "Medial cord",
+                    "Posterior cord",
+                    "It arises directly from C8-T1 roots"
+                ],
+                correct: 1,
+                explanation: "The medial cutaneous nerve of the arm arises from the medial cord of the brachial plexus (C8-T1)."
+            },
+            {
+                question: "Which structure lies immediately posterior to the axillary vein in the axilla?",
+                options: [
+                    "Axillary artery",
+                    "Brachial plexus cords",
+                    "Lymph nodes",
+                    "Subscapularis muscle"
+                ],
+                correct: 0,
+                explanation: "The axillary artery lies immediately posterior to the axillary vein throughout most of the axilla."
+            },
+            {
+                question: "The clavipectoral fascia is pierced by all EXCEPT:",
+                options: [
+                    "Cephalic vein",
+                    "Thoracoacromial artery",
+                    "Lateral pectoral nerve",
+                    "Medial pectoral nerve"
+                ],
+                correct: 3,
+                explanation: "The medial pectoral nerve typically pierces the pectoralis minor muscle, not the clavipectoral fascia."
+            },
+            {
+                question: "Which lymph node group drains the subscapular region?",
+                options: [
+                    "Pectoral nodes",
+                    "Subscapular nodes",
+                    "Lateral nodes",
+                    "Apical nodes"
+                ],
+                correct: 1,
+                explanation: "The subscapular (posterior) nodes drain the posterior thoracic wall and scapular region."
+            },
+            {
+                question: "The triangular interval transmits which structure?",
+                options: [
+                    "Axillary nerve",
+                    "Radial nerve and profunda brachii artery",
+                    "Circumflex scapular artery",
+                    "Suprascapular nerve"
+                ],
+                correct: 1,
+                explanation: "The triangular interval transmits the radial nerve and profunda brachii artery."
+            },
+            {
+                question: "Which muscle is the primary medial rotator of the humerus?",
+                options: [
+                    "Infraspinatus",
+                    "Teres minor",
+                    "Subscapularis",
+                    "Supraspinatus"
+                ],
+                correct: 2,
+                explanation: "The subscapularis is the primary medial rotator of the humerus, with assistance from pectoralis major and latissimus dorsi."
+            },
+            {
+                question: "The superior thoracic artery typically arises from which part of the axillary artery?",
+                options: [
+                    "First part",
+                    "Second part",
+                    "Third part",
+                    "It is not a branch of axillary artery"
+                ],
+                correct: 0,
+                explanation: "The superior thoracic artery typically arises from the first part of the axillary artery."
+            },
+            {
+                question: "Which nerve provides the only motor innervation to the deltoid muscle?",
+                options: [
+                    "Suprascapular nerve",
+                    "Axillary nerve",
+                    "Radial nerve",
+                    "Musculocutaneous nerve"
+                ],
+                correct: 1,
+                explanation: "The axillary nerve (C5-C6) provides the only motor innervation to the deltoid muscle."
+            },
+            {
+                question: "The posterior cord of the brachial plexus lies posterior to which structure?",
+                options: [
+                    "First part of axillary artery",
+                    "Second part of axillary artery",
+                    "Third part of axillary artery",
+                    "Axillary vein"
+                ],
+                correct: 1,
+                explanation: "The posterior cord lies posterior to the second part of the axillary artery."
+            },
+            {
+                question: "Which structure forms the floor of the quadrangular space?",
+                options: [
+                    "Teres major",
+                    "Teres minor",
+                    "Long head of triceps",
+                    "Surgical neck of humerus"
+                ],
+                correct: 0,
+                explanation: "The teres major muscle forms the floor (inferior boundary) of the quadrangular space."
+            },
+            {
+                question: "The lateral root of the median nerve is derived from which cord?",
+                options: [
+                    "Lateral cord",
+                    "Medial cord",
+                    "Posterior cord",
+                    "It arises directly from C5-C7 roots"
+                ],
+                correct: 0,
+                explanation: "The lateral root of the median nerve is derived from the lateral cord of the brachial plexus."
+            },
+            {
+                question: "Which artery anastomoses with the posterior circumflex humeral artery?",
+                options: [
+                    "Profunda brachii artery",
+                    "Anterior circumflex humeral artery",
+                    "Thoracoacromial artery",
+                    "Subscapular artery"
+                ],
+                correct: 1,
+                explanation: "The anterior circumflex humeral artery anastomoses with the posterior circumflex humeral artery around the surgical neck of the humerus."
+            },
+            {
+                question: "The intercostobrachial nerve is a cutaneous branch of which intercostal nerve?",
+                options: [
+                    "T1",
+                    "T2",
+                    "T3",
+                    "T4"
+                ],
+                correct: 1,
+                explanation: "The intercostobrachial nerve is the lateral cutaneous branch of the second intercostal nerve (T2)."
+            },
+            {
+                question: "Which structure is NOT found within the axillary sheath?",
+                options: [
+                    "Axillary artery",
+                    "Axillary vein",
+                    "Brachial plexus cords",
+                    "Lymph nodes"
+                ],
+                correct: 3,
+                explanation: "The lymph nodes are not contained within the axillary sheath; they are embedded in the axillary fat outside the sheath."
+            },
+            {
+                question: "The thoracodorsal artery is a branch of which artery?",
+                options: [
+                    "Axillary artery",
+                    "Subscapular artery",
+                    "Lateral thoracic artery",
+                    "Posterior circumflex humeral artery"
+                ],
+                correct: 1,
+                explanation: "The thoracodorsal artery is a branch of the subscapular artery."
+            },
+            {
+                question: "Which nerve injury results in loss of elbow flexion?",
+                options: [
+                    "Axillary nerve",
+                    "Musculocutaneous nerve",
+                    "Radial nerve",
+                    "Median nerve"
+                ],
+                correct: 1,
+                explanation: "The musculocutaneous nerve injury results in paralysis of the biceps brachii and brachialis muscles, causing loss of elbow flexion."
+            },
+            {
+                question: "The apical axillary lymph nodes receive drainage from all EXCEPT:",
+                options: [
+                    "Lateral nodes",
+                    "Central nodes",
+                    "Pectoral nodes",
+                    "Subscapular nodes"
+                ],
+                correct: 0,
+                explanation: "The apical nodes receive drainage from the central, pectoral, and subscapular nodes, but not directly from the lateral nodes."
+            },
+            {
+                question: "Which structure forms the medial boundary of the triangular space?",
+                options: [
+                    "Teres minor",
+                    "Long head of triceps",
+                    "Teres major",
+                    "Surgical neck of humerus"
+                ],
+                correct: 1,
+                explanation: "The long head of the triceps forms the medial boundary of the triangular space."
+            },
+            {
+                question: "The dorsal scapular nerve innervates which muscle?",
+                options: [
+                    "Serratus anterior",
+                    "Rhomboid major and minor",
+                    "Trapezius",
+                    "Levator scapulae"
+                ],
+                correct: 1,
+                explanation: "The dorsal scapular nerve (C5) innervates the rhomboid major and minor muscles."
+            },
+            {
+                question: "Which vein is most commonly used for pacemaker lead insertion?",
+                options: [
+                    "Axillary vein",
+                    "Cephalic vein",
+                    "Basilic vein",
+                    "Brachial vein"
+                ],
+                correct: 0,
+                explanation: "The axillary vein is commonly used for pacemaker lead insertion due to its large size and relatively straight course."
+            },
+            {
+                question: "The lower trunk of the brachial plexus is formed by which roots?",
+                options: [
+                    "C5-C6",
+                    "C6-C7",
+                    "C7-C8",
+                    "C8-T1"
+                ],
+                correct: 3,
+                explanation: "The lower trunk of the brachial plexus is formed by the C8 and T1 roots."
+            },
+            {
+                question: "Which structure is immediately anterior to the subscapularis muscle?",
+                options: [
+                    "Axillary artery",
+                    "Axillary vein",
+                    "Brachial plexus",
+                    "Scapula"
+                ],
+                correct: 3,
+                explanation: "The subscapularis muscle lies directly on the anterior surface of the scapula."
+            },
+            {
+                question: "The suprascapular nerve arises from which trunk of the brachial plexus?",
+                options: [
+                    "Upper trunk",
+                    "Middle trunk",
+                    "Lower trunk",
+                    "It arises directly from C5 root"
+                ],
+                correct: 0,
+                explanation: "The suprascapular nerve arises from the upper trunk of the brachial plexus (C5-C6)."
+            },
+            {
+                question: "Which structure forms the superior boundary of the triangular interval?",
+                options: [
+                    "Teres major",
+                    "Teres minor",
+                    "Long head of triceps",
+                    "Latissimus dorsi"
+                ],
+                correct: 0,
+                explanation: "The teres major forms the superior boundary of the triangular interval."
+            },
+            {
+                question: "The medial pectoral nerve contains fibers primarily from which spinal segments?",
+                options: [
+                    "C5-C6",
+                    "C6-C7",
+                    "C7-C8",
+                    "C8-T1"
+                ],
+                correct: 3,
+                explanation: "The medial pectoral nerve contains fibers primarily from C8 and T1 spinal segments."
+            },
+            {
+                question: "Which artery provides the main blood supply to the surgical neck of humerus?",
+                options: [
+                    "Anterior circumflex humeral artery",
+                    "Posterior circumflex humeral artery",
+                    "Profunda brachii artery",
+                    "Thoracoacromial artery"
+                ],
+                correct: 1,
+                explanation: "The posterior circumflex humeral artery provides the main blood supply to the surgical neck of the humerus."
+            },
+            {
+                question: "The lateral thoracic artery runs along which muscle?",
+                options: [
+                    "Pectoralis major",
+                    "Pectoralis minor",
+                    "Serratus anterior",
+                    "Latissimus dorsi"
+                ],
+                correct: 2,
+                explanation: "The lateral thoracic artery runs along the lateral border of the serratus anterior muscle."
+            },
+            {
+                question: "Which nerve provides sensory innervation to the tip of the shoulder?",
+                options: [
+                    "Axillary nerve",
+                    "Supraclavicular nerves",
+                    "Intercostobrachial nerve",
+                    "Medial cutaneous nerve of arm"
+                ],
+                correct: 1,
+                explanation: "The supraclavicular nerves (C3-C4) provide sensory innervation to the tip of the shoulder."
+            },
+            {
+                question: "The subscapular nerves arise from which cord?",
+                options: [
+                    "Lateral cord",
+                    "Medial cord",
+                    "Posterior cord",
+                    "All three cords contribute"
+                ],
+                correct: 2,
+                explanation: "The upper and lower subscapular nerves arise from the posterior cord of the brachial plexus."
+            },
+            {
+                question: "Which structure is most likely to be compressed in thoracic outlet syndrome?",
+                options: [
+                    "Axillary nerve",
+                    "Lower trunk of brachial plexus",
+                    "Upper trunk of brachial plexus",
+                    "Musculocutaneous nerve"
+                ],
+                correct: 1,
+                explanation: "The lower trunk of the brachial plexus (C8-T1) is most commonly compressed in thoracic outlet syndrome."
+            },
+            {
+                question: "The circumflex scapular artery anastomoses with which artery?",
+                options: [
+                    "Suprascapular artery",
+                    "Dorsal scapular artery",
+                    "Transverse cervical artery",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "The circumflex scapular artery anastomoses with the suprascapular and dorsal scapular arteries (branch of transverse cervical artery), forming an important collateral network."
+            },
+            {
+                question: "Which muscle is innervated by both medial and lateral pectoral nerves?",
+                options: [
+                    "Pectoralis major only",
+                    "Pectoralis minor only",
+                    "Both pectoralis major and minor",
+                    "Serratus anterior"
+                ],
+                correct: 0,
+                explanation: "The pectoralis major receives innervation from both medial and lateral pectoral nerves, while pectoralis minor is innervated primarily by the medial pectoral nerve."
+            },
+            {
+                question: "The axillary lymph nodes typically number:",
+                options: [
+                    "10-15 nodes",
+                    "15-20 nodes",
+                    "20-30 nodes",
+                    "30-40 nodes"
+                ],
+                correct: 2,
+                explanation: "The axillary lymph nodes typically number 20-30 nodes, organized into five groups."
+            },
+            {
+                question: "Which structure forms the posterior boundary of the deltopectoral triangle?",
+                options: [
+                    "Clavicle",
+                    "Deltoid muscle",
+                    "Pectoralis major muscle",
+                    "Coracoid process"
+                ],
+                correct: 1,
+                explanation: "The deltoid muscle forms the posterior boundary of the deltopectoral triangle."
+            },
+            {
+                question: "The medial root of the median nerve is derived from which cord?",
+                options: [
+                    "Lateral cord",
+                    "Medial cord",
+                    "Posterior cord",
+                    "It arises directly from C8-T1 roots"
+                ],
+                correct: 1,
+                explanation: "The medial root of the median nerve is derived from the medial cord of the brachial plexus."
+            }
+        ];
+
+        // Initialize the quiz
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionsSection = document.getElementById('questions-section');
+            const answerSection = document.getElementById('answer-section');
+            const answerBank = document.getElementById('answer-bank');
+            const submitBtn = document.getElementById('submit-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultsSection = document.getElementById('results-section');
+            const scoreValue = document.getElementById('score-value');
+            const attemptedValue = document.getElementById('attempted-value');
+            const passedValue = document.getElementById('passed-value');
+            const failedValue = document.getElementById('failed-value');
+            const detailedAnswers = document.getElementById('detailed-answers');
+            const shareTwitterBtn = document.getElementById('share-twitter');
+            const shareFacebookBtn = document.getElementById('share-facebook');
+            const shareWhatsappBtn = document.getElementById('share-whatsapp');
+            const shareCopyBtn = document.getElementById('share-copy');
+            
+            let userAnswers = Array(quizData.length).fill(null);
+            
+            // Create question elements
+            quizData.forEach((questionData, index) => {
+                // Create question element for questions section
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                questionElement.innerHTML = `
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-text">${questionData.question}</div>
+                    <div class="options">
+                        ${questionData.options.map((option, optionIndex) => `
+                            <div class="option" data-question="${index}" data-option="${optionIndex}">
+                                ${String.fromCharCode(65 + optionIndex)}. ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                questionsSection.appendChild(questionElement);
+                
+                // Create answer element for answer bank
+                const answerElement = document.createElement('div');
+                answerElement.className = 'answer-item';
+                answerElement.innerHTML = `
+                    <strong>${index + 1}. ${questionData.question}</strong><br>
+                    <span class="answer-correct">Correct: ${String.fromCharCode(65 + questionData.correct)}. ${questionData.options[questionData.correct]}</span>
+                `;
+                answerBank.appendChild(answerElement);
+            });
+            
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionIndex = parseInt(this.getAttribute('data-question'));
+                    const optionIndex = parseInt(this.getAttribute('data-option'));
+                    
+                    // Remove selected class from all options in this question
+                    const questionOptions = document.querySelectorAll(`.option[data-question="${questionIndex}"]`);
+                    questionOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store user's answer
+                    userAnswers[questionIndex] = optionIndex;
+                });
+            });
+            
+            // Submit button event listener
+            submitBtn.addEventListener('click', function() {
+                let score = 0;
+                let attempted = 0;
+                let passed = 0;
+                let failed = 0;
+                
+                // Clear previous detailed answers
+                detailedAnswers.innerHTML = '';
+                
+                // Evaluate answers
+                quizData.forEach((questionData, index) => {
+                    const userAnswer = userAnswers[index];
+                    const correctAnswer = questionData.correct;
+                    const questionOptions = document.querySelectorAll(`.option[data-question="${index}"]`);
+                    
+                    if (userAnswer !== null) {
+                        attempted++;
+                        
+                        // Mark correct/incorrect answers
+                        questionOptions.forEach((option, optionIndex) => {
+                            if (optionIndex === correctAnswer) {
+                                option.classList.add('correct');
+                            } else if (optionIndex === userAnswer && userAnswer !== correctAnswer) {
+                                option.classList.add('incorrect');
+                            }
+                        });
+                        
+                        if (userAnswer === correctAnswer) {
+                            score++;
+                            passed++;
+                        } else {
+                            failed++;
+                        }
+                        
+                        // Create detailed answer element
+                        const detailedAnswer = document.createElement('div');
+                        detailedAnswer.className = 'answer-item';
+                        const userAnswerClass = userAnswer === correctAnswer ? 'answer-correct' : 'answer-incorrect';
+                        detailedAnswer.innerHTML = `
+                            <strong>${index + 1}. ${questionData.question}</strong><br>
+                            <span class="${userAnswerClass}">Your answer: ${userAnswer !== null ? String.fromCharCode(65 + userAnswer) + '. ' + questionData.options[userAnswer] : 'Not attempted'}</span><br>
+                            <span class="answer-correct">Correct: ${String.fromCharCode(65 + correctAnswer)}. ${questionData.options[correctAnswer]}</span><br>
+                            <em>${questionData.explanation}</em>
+                        `;
+                        detailedAnswers.appendChild(detailedAnswer);
+                    } else {
+                        // Create detailed answer for unattempted question
+                        const detailedAnswer = document.createElement('div');
+                        detailedAnswer.className = 'answer-item';
+                        detailedAnswer.innerHTML = `
+                            <strong>${index + 1}. ${questionData.question}</strong><br>
+                            <span class="answer-incorrect">Your answer: Not attempted</span><br>
+                            <span class="answer-correct">Correct: ${String.fromCharCode(65 + correctAnswer)}. ${questionData.options[correctAnswer]}</span><br>
+                            <em>${questionData.explanation}</em>
+                        `;
+                        detailedAnswers.appendChild(detailedAnswer);
+                    }
+                });
+                
+                // Update score and stats
+                scoreValue.textContent = `${score}/${quizData.length}`;
+                attemptedValue.textContent = attempted;
+                passedValue.textContent = passed;
+                failedValue.textContent = failed;
+                
+                // Show results section and answer section
+                resultsSection.style.display = 'block';
+                answerSection.classList.add('visible');
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Reset button event listener
+            resetBtn.addEventListener('click', function() {
+                userAnswers = Array(quizData.length).fill(null);
+                
+                // Clear all selections
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Hide results section and answer section
+                resultsSection.style.display = 'none';
+                answerSection.classList.remove('visible');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Share buttons functionality
+            shareTwitterBtn.addEventListener('click', function() {
+                const score = document.getElementById('score-value').textContent;
+                const text = `I scored ${score} on the Axilla Gross Anatomy 2 Quiz! Test your knowledge too.`;
+                const url = window.location.href;
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+            });
+            
+            shareFacebookBtn.addEventListener('click', function() {
+                const url = window.location.href;
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+            });
+            
+            shareWhatsappBtn.addEventListener('click', function() {
+                const score = document.getElementById('score-value').textContent;
+                const text = `I scored ${score} on the Axilla Gross Anatomy 2 Quiz! Test your knowledge too: ${window.location.href}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            });
+            
+            shareCopyBtn.addEventListener('click', function() {
+                const score = document.getElementById('score-value').textContent;
+                const attempted = document.getElementById('attempted-value').textContent;
+                const passed = document.getElementById('passed-value').textContent;
+                const text = `Axilla Gross Anatomy 2 Quiz Results:
+Score: ${score}
+Questions Attempted: ${attempted}
+Questions Passed: ${passed}
+Test your knowledge: ${window.location.href}`;
+                
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('Results copied to clipboard!');
+                }, function() {
+                    alert('Failed to copy results. Please try again.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
